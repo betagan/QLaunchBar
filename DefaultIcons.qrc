@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/DefaultIcons">
+        <file alias="closeButtonIcon">DefaultIcons/Actions-application-exit-icon.png</file>
+        <file alias="optionsButtonIcon">DefaultIcons/Actions-configure-icon.png</file>
+        <file alias="generalSettingsIcon">DefaultIcons/oxygen/256x256/categories/preferences-other.png</file>
+        <file alias="updateSettingsIcon">DefaultIcons/oxygen/256x256/categories/preferences-system-network.png</file>
+        <file alias="launchEntrySettingsIcon">DefaultIcons/oxygen/128x128/places/favorites.png</file>
+    </qresource>
+</RCC>
