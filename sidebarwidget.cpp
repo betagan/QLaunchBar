@@ -5,7 +5,10 @@
 #include <QMouseEvent>
 #include <QPropertyAnimation>
 #include <QTimer>
-#include <iostream>
+#include <QAction>
+#include <QMenu>
+#include <QApplication>
+
 
 #include "Settings/settingswidget.h"
 
@@ -19,9 +22,8 @@ SidebarWidget::SidebarWidget(const int desktopWidth, const int desktopHeight, QW
 
     // no Window Border and Close/Minimize-SystemButtons and AlwaysOnTop
     setWindowFlags(Qt::FramelessWindowHint);
-    setStyleSheet("background:transparent;");
     setAttribute(Qt::WA_TranslucentBackground);
-    setWindowFlags(windowFlags() | Qt::CustomizeWindowHint | Qt::WindowStaysOnTopHint);
+    setWindowFlags(windowFlags() | Qt::CustomizeWindowHint | Qt::WindowStaysOnTopHint | Qt::Tool);
 
     // Button: Close Widget
     m_closeButton = new QPushButton(QIcon(":/DefaultIcons/closeButtonIcon"), "", NULL);
@@ -68,6 +70,15 @@ SidebarWidget::SidebarWidget(const int desktopWidth, const int desktopHeight, QW
 
     // Layout: Apply to Widget
     setLayout(basicLayout);
+
+    initTrayIcon();
+
+    QObject::connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+            this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+
+    m_trayIcon->setIcon(QIcon(":/DefaultIcons/trayIcon"));
+    m_trayIcon->setToolTip(tr("QLaunchBar"));
+    m_trayIcon->show();
 
     // initialize Animation system for sliding widget on mouseover
     m_animation = new QPropertyAnimation(this, "geometry");
@@ -120,11 +131,48 @@ void SidebarWidget::mouseMoveEvent(QMouseEvent* /*event*/)
 
 void SidebarWidget::closeButtonClicked()
 {
-    close();
+    QApplication::quit();
 }
 
 void SidebarWidget::openSettingsDialog()
 {
     SettingsWidget settingsWidget;
     settingsWidget.exec();
+}
+
+
+void SidebarWidget::initTrayIcon()
+{
+    m_optionsAction = new QAction(tr("&Options"), this);
+    m_optionsAction->setIcon(QIcon(":/DefaultIcons/optionsButtonIcon"));
+    connect(m_optionsAction, SIGNAL(triggered()), this, SLOT(openSettingsDialog()));
+
+    m_quitAction = new QAction(tr("&Quit"), this);
+    m_quitAction->setIcon(QIcon(":/DefaultIcons/closeButtonIcon"));
+    connect(m_quitAction, SIGNAL(triggered()), this, SLOT(closeButtonClicked()));
+
+    m_trayIconMenu = new QMenu(this);
+    m_trayIconMenu->setTitle("QLaunchBar");
+    m_trayIconMenu->addAction(m_optionsAction);
+    m_trayIconMenu->addSeparator();
+    m_trayIconMenu->addAction(m_quitAction);
+
+    m_trayIcon = new QSystemTrayIcon(this);
+    m_trayIcon->setContextMenu(m_trayIconMenu);
+}
+
+void SidebarWidget::iconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+    switch (reason) {
+    case QSystemTrayIcon::Trigger:
+    case QSystemTrayIcon::DoubleClick:
+        onMouseMoved();
+        m_animationTimer->start(2000);
+        break;
+    case QSystemTrayIcon::MiddleClick:
+
+        break;
+    default:
+        ;
+    }
 }

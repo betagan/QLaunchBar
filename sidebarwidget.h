@@ -2,6 +2,7 @@
 #define SIDEBARWIDGET_H
 
 #include <QWidget>
+#include <QSystemTrayIcon>
 #include "launchbutton.h"
 
 class QPushButton;
@@ -23,6 +24,7 @@ protected:
     void mouseMoveEvent(QMouseEvent* /*event*/);
 
 private:
+    void initTrayIcon();
     QPushButton* m_closeButton;
     QPushButton* m_optionsButton;
     QList<LaunchButton*> m_launchButtons;
@@ -32,9 +34,15 @@ private:
     const int m_desktopHeight;
     QTimer *m_animationTimer;
 
+    QAction *m_optionsAction;
+    QAction *m_quitAction;
+    QSystemTrayIcon *m_trayIcon;
+    QMenu *m_trayIconMenu;
+
 private slots:
     void closeButtonClicked();
     void hideWidget();
+    void iconActivated(QSystemTrayIcon::ActivationReason reason);
 };
 
 #endif // SIDEBARWIDGET_H

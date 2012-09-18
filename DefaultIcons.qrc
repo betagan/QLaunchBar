@@ -5,5 +5,9 @@
         <file alias="generalSettingsIcon">DefaultIcons/oxygen/256x256/categories/preferences-other.png</file>
         <file alias="updateSettingsIcon">DefaultIcons/oxygen/256x256/categories/preferences-system-network.png</file>
         <file alias="launchEntrySettingsIcon">DefaultIcons/oxygen/128x128/places/favorites.png</file>
+        <file alias="trayIcon">DefaultIcons/oxygen/128x128/actions/go-up.png</file>
+        <file alias="saveIcon">DefaultIcons/oxygen/48x48/actions/document-save.png</file>
+        <file alias="undoIcon">DefaultIcons/oxygen/48x48/actions/edit-undo.png</file>
+        <file alias="folderIcon">DefaultIcons/oxygen/48x48/places/folder-yellow.png</file>
     </qresource>
 </RCC>
